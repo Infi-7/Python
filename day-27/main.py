@@ -3,11 +3,13 @@ from tkinter import *
 window = Tk()
 window.title("My First GUI Program")
 window.minsize(width=500, height=300)
+window.config(padx=100, pady=200)
 
 # Label
 
 my_label = Label(text="I am a label", font=("Arial", 24, "normal"))
 my_label.grid(row=0, column=0)
+my_label.config(pady=50, padx=50)
 
 # Button
 
