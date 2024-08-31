@@ -10,11 +10,29 @@ choices = ["Light", "Dark"]
 variable = StringVar()
 variable.set(choices[0])
 
+
+def theme_changer():
+    if variable.get() == "Light":
+        converter_win.config(background="white")
+        label_1.config(background="white", foreground="black")
+        label_2.config(background="white", foreground="black")
+        label_3.config(background="white", foreground="black")
+        label_4.config(background="white", foreground="black")
+    elif variable.get() == "Dark":
+        converter_win.config(background="black")
+        label_1.config(background="black", foreground="white")
+        label_2.config(background="black", foreground="white")
+        label_3.config(background="black", foreground="white")
+        label_4.config(background="black", foreground="white")
+
+
+# button to change theme
+theme_chang_button = Button(command=theme_changer)
+theme_chang_button.config(pady=10, padx=10)
+theme_chang_button.grid(row=0, column=8)
+
 theme_choice = OptionMenu(converter_win, variable, *choices)
-if theme_choice == "Dark":
-    print(variable)
-elif theme_choice == "Light":
-    print(variable)
+theme_choice.config(padx=10, pady=10)
 theme_choice.grid(row=0, column=6)
 
 
@@ -24,7 +42,7 @@ user_input.grid(row=1, column=3)
 
 # label 1
 label_1 = Label(text="Miles")
-label_1.config(padx=10, pady=10, background="black")
+label_1.config(padx=10, pady=10, background="black", foreground="white")
 label_1.grid(row=1, column=6)
 
 # label 2
@@ -54,5 +72,7 @@ def button_click():
 calculate_button = Button(text="Calculate", command=button_click)
 calculate_button.grid(row=3, column=3)
 calculate_button.config(padx=10, pady=10)
+
+theme_changer()
 
 converter_win.mainloop()
