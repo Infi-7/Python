@@ -1,6 +1,5 @@
 # imports
 import math
-import time
 from tkinter import *
 
 # ---------------------------- CONSTANTS ------------------------------- #
@@ -15,12 +14,15 @@ LONG_BREAK_MIN = 20 * 60
 reps = 0
 timer = None
 
+
 # ---------------------------- TIMER RESET ------------------------------- # 
 def reset_timer():
     window.after_cancel(timer)
     status_label.config(text="Timer", foreground=GREEN, background=YELLOW, font=(FONT_NAME, 35, "bold"))
-    count_down(0)
+    canvas.itemconfig(timer_text, text="00:00")
     check_label.config(text="")
+    global reps
+    reps = 0
 
 
 # ---------------------------- TIMER MECHANISM ------------------------------- # 
@@ -37,8 +39,6 @@ def start_timer():
         else:
             count_down(20)
             status_label.config(text="Work", fg=GREEN)
-
-
 
 
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- # 
