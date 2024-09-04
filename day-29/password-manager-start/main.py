@@ -3,6 +3,7 @@ import string
 from tkinter import *
 import random
 from tkinter import messagebox
+import pyperclip
 
 # variables
 WIDTH = 200
@@ -26,7 +27,6 @@ def password_generator():
             PASS += string.digits[random.randint(0, 9)]
 
     text_password.insert(0, PASS)
-    pyperclip.copy()
 
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
@@ -44,6 +44,7 @@ def save():
     text_website.delete(0, len(text_website.get()))
     text_password.delete(0, len(text_password.get()))
     text_website.focus()
+    pyperclip.copy(PASS)
 
 
 # ---------------------------- UI SETUP -------------------------------#
