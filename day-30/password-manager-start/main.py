@@ -33,50 +33,37 @@ def password_generator():
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def save():
-    if text_password.get() and text_website.get() and text_user_email.get() != "":
-        msgbox = messagebox.askokcancel(title="website",
-                                        message=f"These are the details entered: \nEmail: {text_user_email.get()}"
-                                                f"\nPassword: {text_password.get()}")
-        new_data = {text_website.get(): {
-            "email": text_user_email.get(),
-            "password": text_password.get()
-        }}
+    website = text_website.get()
+    email = text_user_email.get()
+    password = text_password.get()
 
-        if msgbox:
-            try:
-                open("data.json", mode="r")
+    new_data = {website: {
+        "email": email,
+        "password": password
+    }}
 
-            except FileNotFoundError:
-                f = open("data.json", mode="w")
-                # Reading old data
-                data = json.load(f)
-                # Updating old with new data
-                data.update(new_data)
-                # Saving updated data
-                json.dump(new_data, f, indent=4)
-
-            else:
-                f = open("data.json", mode="w")
-                # Reading old data
-                data = json.load(f)
-                # Updating old with new data
-                data.update(new_data)
-                # Saving updated data
-                json.dump(new_data, f, indent=4)
-
-                '''with open("data.json", mode="w") as f:
-                    # Reading old data
-                    data = json.load(f)
-                    # Updating old with new data
-                    data.update(new_data)
-                    # Saving updated data
-                    json.dump(new_data, f, indent=4)'''
+    if len(password) == 0 or len(website) == 0:
+        messagebox.showinfo("Oops!", "Please don't leave any field empty!")
 
     else:
-        messagebox.showwarning("Oops!", "Please don't leave any field empty!")
-    text_website.delete(0, len(text_website.get()))
-    text_password.delete(0, len(text_password.get()))
-    text_website.focus()
+
+        try:
+            with open("data.json", mode="r") as f:
+                data = json.load(f)
+
+        except FileNotFoundError:
+            with open("data.json", mode="w") as f:
+                json.dump(new_data, f, indent=4)
+
+        else:
+            data.update(new_data)
+
+            with open("data.json", mode="w") as f:
+                json.dump(data, f, indent=4)
+
+        finally:
+            text_website.delete(0, len(website))
+            text_password.delete(0, len(password))
 
 
 # ---------------------------- UI SETUP -------------------------------#
