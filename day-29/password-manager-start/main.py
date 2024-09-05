@@ -27,6 +27,7 @@ def password_generator():
             PASS += string.digits[random.randint(0, 9)]
 
     text_password.insert(0, PASS)
+    pyperclip.copy(PASS)
 
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
@@ -44,7 +45,6 @@ def save():
     text_website.delete(0, len(text_website.get()))
     text_password.delete(0, len(text_password.get()))
     text_website.focus()
-    pyperclip.copy(PASS)
 
 
 # ---------------------------- UI SETUP -------------------------------#
