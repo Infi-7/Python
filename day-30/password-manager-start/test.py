@@ -7,5 +7,4 @@ with open("data.json", mode="r") as f:
 
 print(data[input_user])
 
-for x,y in dict.fromkeys(data[input_user]):
-    print(x, y)
+print(data[input_user]["password"])

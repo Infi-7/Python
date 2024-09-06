@@ -12,8 +12,10 @@ HEIGHT = 200
 PADDING = 50
 PASS = ''
 
+
 # ---------------------------- Info Finder ------------------------------- #
 def find_password():
+    website = text_website.get()
     try:
         with open("data.json", mode="r") as f:
             data = json.load(f)
@@ -22,11 +24,9 @@ def find_password():
         messagebox.showinfo("OOPS", "Specified file does not exist!")
 
     else:
-        website = text_website.get
-        for entry in data:
-            if text_website.get() in entry:
-                for x in data[entry.index()]:
-                    print(x.password)
+        search_value = data[website]
+        search_results = search_value["password"]
+        messagebox.showinfo("Results", f"Website: {website}\nPassword: {search_results}")
 
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
