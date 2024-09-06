@@ -15,7 +15,8 @@ PASS = ''
 
 # ---------------------------- Info Finder ------------------------------- #
 def find_password():
-    website = text_website.get()
+    website = text_website.get().title()
+    email = text_user_email.get()
     try:
         with open("data.json", mode="r") as f:
             data = json.load(f)
@@ -28,9 +29,9 @@ def find_password():
             search_value = data[website]
             search_results = search_value["password"]
         except KeyError:
-            messagebox.showwarning("Invalid Input", "No details for the website exists!")
+            messagebox.showwarning("Invalid Input", f"No details for the {website} exists!")
         else:
-            messagebox.showinfo("Results", f"Website: {website}\nPassword: {search_results}")
+            messagebox.showinfo(f"{website}", f"Email: {email}\nPassword: {search_results}")
 
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
@@ -53,7 +54,7 @@ def password_generator():
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def save():
-    website = text_website.get()
+    website = text_website.get().title()
     email = text_user_email.get()
     password = text_password.get()
 
