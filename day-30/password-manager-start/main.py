@@ -21,12 +21,16 @@ def find_password():
             data = json.load(f)
 
     except FileNotFoundError:
-        messagebox.showinfo("OOPS", "Specified file does not exist!")
+        messagebox.showinfo("OOPS", "No Data File Found!")
 
     else:
-        search_value = data[website]
-        search_results = search_value["password"]
-        messagebox.showinfo("Results", f"Website: {website}\nPassword: {search_results}")
+        try:
+            search_value = data[website]
+            search_results = search_value["password"]
+        except KeyError:
+            messagebox.showwarning("Invalid Input", "No details for the website exists!")
+        else:
+            messagebox.showinfo("Results", f"Website: {website}\nPassword: {search_results}")
 
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
