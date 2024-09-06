@@ -12,6 +12,22 @@ HEIGHT = 200
 PADDING = 50
 PASS = ''
 
+# ---------------------------- Info Finder ------------------------------- #
+def find_password():
+    try:
+        with open("data.json", mode="r") as f:
+            data = json.load(f)
+
+    except FileNotFoundError:
+        messagebox.showinfo("OOPS", "Specified file does not exist!")
+
+    else:
+        website = text_website.get
+        for entry in data:
+            if text_website.get() in entry:
+                for x in data[entry.index()]:
+                    print(x.password)
+
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 def password_generator():
@@ -91,26 +107,31 @@ label_password = Label(text="Password: ")
 label_password.grid(row=3, column=0, padx=PADDING - 47, pady=PADDING - 47)
 
 # Website Textbox
-text_website = Entry(width=40, highlightthickness=0)
+text_website = Entry(width=38, highlightthickness=0)
 text_website.focus()
 text_website.grid(row=1, column=1, columnspan=2, stick="W")
 
 # Username/Email Textbox
-text_user_email = Entry(width=40, highlightthickness=0)
+text_user_email = Entry(width=38, highlightthickness=0)
 text_user_email.insert(0, "abc@gmail.com")
 text_user_email.grid(row=2, column=1, columnspan=2, stick="W")
 
 # Password Textbox
-text_password = Entry(width=21, highlightthickness=0)
+text_password = Entry(width=28, highlightthickness=0)
 text_password.grid(row=3, column=1, columnspan=2, stick="W")
 
 # Add button
-button_add = Button(text="Add", width=33, highlightthickness=0, borderwidth=0.5, command=save)
+button_add = Button(text="Add", width=40, highlightthickness=0, borderwidth=0.5, command=save)
 button_add.grid(row=4, column=1, padx=PADDING - 47, pady=PADDING - 47, columnspan=2, sticky="W")
 
 # Generate Button
 button_generate_password = Button(text="Generate Password", highlightthickness=0, borderwidth=0.5,
-                                  command=password_generator)
+                                  command=password_generator, width=15)
 button_generate_password.grid(row=3, column=1, stick="E", columnspan=2)
+
+# Search button
+button_search = Button(text="Search", highlightthickness=0, borderwidth=0.5,
+                                  width=7, command=find_password)
+button_search.grid(row=1, column=1, stick="E", columnspan=2)
 
 window.mainloop()
