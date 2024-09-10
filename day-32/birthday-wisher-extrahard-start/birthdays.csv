@@ -1,3 +1,4 @@
-name,email,year,month,day
-Test,test@email.com,1961,12,21
-[Fill this in!]
+full_name,first,last,email,day,month,year
+Autumn Fowler,Autumn,Fowler,autumn_fowler@fakecorp.com,21,11,1998
+Carla Hess,Carla,Hess,carla_hess@fakecorp.com,10,9,1965
+Romeo Glover,Romeo,Glover,romeo_glover@fakecorp.com,31,1,2013
