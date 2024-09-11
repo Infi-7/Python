@@ -7,9 +7,16 @@ output = ''
 def get_quote():
     global output
     output = ''
-    response = requests.get("https://api.kanye.rest/")
-    output += response.json()["quote"]
-    canvas.itemconfig(quote_text, text=output)
+    try:
+        response = requests.get("https://api.kanye.rest/")
+        response.raise_for_status()
+
+    except Exception as err:
+        print(f"Other error occurred: {err}")
+
+    else:
+        output += response.json()["quote"]
+        canvas.itemconfig(quote_text, text=output)
 
 
 window = Tk()
