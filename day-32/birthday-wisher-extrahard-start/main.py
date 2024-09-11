@@ -7,21 +7,26 @@ now = dt.datetime.now()
 year = now.year
 day = now.day
 month = now.month
+current_year = 0
+receiver_email = ""
 
 df = pd.read_csv("birthdays.csv")
 convert_to_df = pd.DataFrame(df)
-for x in convert_to_df["day"]:
-    for y in convert_to_df["month"]:
-        if x == day and y == month:
-            print(x, y)
+convert_to_dict = convert_to_df.to_dict("split")
 
 
-for x in range(len(convert_to_df["day"])):
-    for y in range(len(convert_to_df["month"])):
-        if x == y:
-            print("true")
+def email_retriever():
+    global current_year, receiver_email
+    current_year = 0
+    receiver_email = ''
+    for x in convert_to_dict["index"]:
+        if convert_to_dict["data"][x][4] == day and convert_to_dict["data"][x][5] == month:
+            current_year = convert_to_dict["data"][x][6]
+            receiver_email += convert_to_dict["data"][x][3]
 
-"""
+
+email_retriever()
+
 my_email = "patilaniket209@gmail.com"
 password = "zepu snzt qpij rtin"
 
@@ -31,17 +36,6 @@ conn.login(user=my_email, password=password)
 conn.sendmail(
     from_addr=my_email,
     to_addrs="freeskincs@gmail.com",
-    msg=f"Subject:Birthday Wishes.\n\nHappy Birthday!!!.")
+    msg=f"Subject:Birthday Wishes.\n\nHappy {year - current_year} Birthday!!!.")
 conn.close()
-"""
-# 1. Update the birthdays.csv
-
-# 2. Check if today matches a birthday in the birthdays.csv
-
-# 3. If step 2 is true, pick a random letter from letter templates and replace the [NAME] with the person's actual name from birthdays.csv
-
-# 4. Send the letter generated in step 3 to that person's email address.
-
-
-
 
