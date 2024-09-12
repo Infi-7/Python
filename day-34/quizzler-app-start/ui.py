@@ -14,7 +14,7 @@ class QuizInterface:
         self.label.grid(row=0, column=1, padx=20, pady=20)
 
         self.canvas = Canvas(width=300, height=250)
-        self.canvas_text = self.canvas.create_text(150, 125, text="Hello", font=("Arial", 20, "italic"))
+        self.canvas_text = self.canvas.create_text(150, 125, text="", font=("Arial", 20, "italic"))
         self.canvas.grid(row=1, column=0, columnspan=2, padx=20, pady=20)
 
         image_check = PhotoImage(file="./images/true.png")
