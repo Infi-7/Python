@@ -26,13 +26,4 @@ class FlightSearch:
         else:
             raise Exception(f"Error making API request: {response.status_code}, {response.text}")
 
-
-    endpoint = '/v2/shopping/flight-offers'
-    params = {
-        'originLocationCode': 'MAD',
-        'destinationLocationCode': 'BKK',
-        'departureDate': '2024-10-10',
-        'adults': 1}
-
     fl = FlightData(api_key, api_secret)
-
