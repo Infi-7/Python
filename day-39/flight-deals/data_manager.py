@@ -1,9 +1,10 @@
 import requests
 from flight_search import *
 from requests.auth import HTTPBasicAuth
+from notification_manager import *
 
-sheety_url = "https://api.sheety.co/8530a807122d7886075f4e4ab96e350c/flightDeals/prices"
 endpoint = '/v2/shopping/flight-offers'
+return_list = []
 
 
 class DataManager:
@@ -19,8 +20,9 @@ class DataManager:
         return self.response_json
 
     def data_manager(self):
+
         if self.response_json is None:
-            self.data = DataManager(sheety_url).data_collector()
+            self.data = DataManager(self.url).data_collector()
 
             for x in range(len(self.data)):
                 city = self.data[x]["city"]
@@ -43,7 +45,6 @@ class DataManager:
 
                 basic = HTTPBasicAuth(username=name, password=password)
 
-
                 try:
                     data = FlightSearch().make_request(endpoint, params)
                 except:
@@ -61,10 +62,9 @@ class DataManager:
                             }
                         }
 
-                        update = requests.put(url=url, json=body, headers=sheety_header, auth=basic)
-                        print(update.json)
-                        print("new lowest!")  # and send notification
+                        requests.put(url=url, json=body, headers=sheety_header, auth=basic)
 
+                        formatted_body = f"\nNew Discount Offer\nThe flight to {body["price"]["city"]} with IATA Code {body["price"]["iataCode"]} has a discount totalling to {body["price"]["lowestPrice"]}."
 
+                        notify = NotificationManager(formatted_body).notifier()
 
-DataManager(sheety_url).data_manager()
