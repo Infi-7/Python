@@ -1,5 +1,6 @@
 import requests
 from flight_search import *
+from requests.auth import HTTPBasicAuth
 
 sheety_url = "https://api.sheety.co/8530a807122d7886075f4e4ab96e350c/flightDeals/prices"
 endpoint = '/v2/shopping/flight-offers'
@@ -22,29 +23,48 @@ class DataManager:
             self.data = DataManager(sheety_url).data_collector()
 
             for x in range(len(self.data)):
+                city = self.data[x]["city"]
                 iata_code = self.data[x]["iataCode"]
+                current_lowest_price = self.data[x]["lowestPrice"]
                 params = {
                     'originLocationCode': 'BOM',
                     'destinationLocationCode': f'{iata_code}',
                     'departureDate': '2024-10-10',
+                    'maxPrice': current_lowest_price,
                     'adults': 1}
-                current_lowest_price = self.data[x]["lowestPrice"]
 
-                data = FlightSearch().make_request(endpoint, params)
-                lst = [float(data["data"][x]["price"]["total"]) for x in range(len(data["data"]))]
+                sheety_header = {
+                    'Content-Type': 'application/json',
+                    "Authorization": "Basic bnVsbDpudWxs"
+                }
 
-                if current_lowest_price > min(lst):
-                    print("new lowest!")  # and send notification
+                name = "Infi_7"
+                password = "aniketpassword"
 
-
-                '''if self.data[x]["lowestPrice"] > 
-                price = self.data[x]["lowestPrice"]
-                print(price)'''
+                basic = HTTPBasicAuth(username=name, password=password)
 
 
-        '''flight_search = FlightSearch().make_request(endpoint, params)
-        flight_search_response = flight_search
-        print(response)'''
+                try:
+                    data = FlightSearch().make_request(endpoint, params)
+                except:
+                    print("No flights under current lowest")
+                else:
+                    lst_price = [float(data["data"][x]["price"]["total"]) for x in range(len(data["data"]))]
+
+                    if current_lowest_price > min(lst_price):
+                        url = f"https://api.sheety.co/8530a807122d7886075f4e4ab96e350c/flightDeals/prices/{2 + x}"
+                        body = {
+                            "price": {
+                                "city": city,
+                                "iataCode": iata_code,
+                                "lowestPrice": min(lst_price)
+                            }
+                        }
+
+                        update = requests.put(url=url, json=body, headers=sheety_header, auth=basic)
+                        print(update.json)
+                        print("new lowest!")  # and send notification
+
 
 
 DataManager(sheety_url).data_manager()
