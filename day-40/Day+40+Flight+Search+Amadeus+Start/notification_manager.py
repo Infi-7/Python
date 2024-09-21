@@ -1,5 +1,6 @@
 import os
 from twilio.rest import Client
+import smtplib
 
 # Using a .env file to retrieve the phone numbers and tokens.
 
@@ -7,7 +8,22 @@ class NotificationManager:
 
     def __init__(self):
         self.client = Client('ACc145f1feaf6961edc7fddce6fa276666', "4c92718940e917ade54ade0664e5b6a4")
+        self.my_email = "patilaniket209@gmail.com"
+        self.password = "zepu snzt qpij rtin"
 
+    def send_emails(self, message_body):
+        conn = smtplib.SMTP("smtp.gmail.com")
+        conn.starttls()
+        conn.login(user=self.my_email, password=self.password)
+        conn.sendmail(
+            from_addr=self.my_email,
+            to_addrs="freeskincs@gmail.com",
+            msg=message_body)
+        conn.close()
+
+
+
+'''
     def send_sms(self, message_body):
         """
         Sends an SMS message through the Twilio API.
@@ -40,12 +56,6 @@ class NotificationManager:
 
     # Is SMS not working for you or prefer whatsapp? Connect to the WhatsApp Sandbox!
     # https://console.twilio.com/us1/develop/sms/try-it-out/whatsapp-learn
-    """
-    def send_whatsapp(self, message_body):
-        message = self.client.messages.create(
-            from_=f'whatsapp:{os.environ["TWILIO_WHATSAPP_NUMBER"]}',
-            body=message_body,
-            to=f'whatsapp:{os.environ["TWILIO_VERIFIED_NUMBER"]}'
-        )
-        print(message.sid)
-"""
+'''
+
+

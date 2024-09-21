@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 SHEETY_PRICES_ENDPOINT = "https://api.sheety.co/8530a807122d7886075f4e4ab96e350c/flightDeals/prices"
-
+SHEETY_USERS_ENDPOINT = "https://api.sheety.co/8530a807122d7886075f4e4ab96e350c/flightDeals/users"
 
 class DataManager:
 
@@ -40,3 +40,10 @@ class DataManager:
                 json=new_data
             )
             print(response.text)
+
+    def get_customer_emails(self):
+        response = requests.get(url=SHEETY_USERS_ENDPOINT)
+        raw_data = response.json()['users']
+        length_raw_data = len(raw_data)
+        lst = [raw_data[x]['enterYourEmailAddress'] for x in range(length_raw_data)]
+        return lst
