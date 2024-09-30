@@ -20,20 +20,34 @@ language_id.click()
 
 time.sleep(5)
 
+enables_list = {}
 cookie = driver.find_element(By.ID,value="bigCookie")
-product0 = driver.find_element(By.ID,value="product0")
+
+# upgrade_section = driver.find_element(By.ID, value="products0")
+
+# schedule.every(5).seconds.do(looker())
+'''
+test = driver.find_element(By.CSS_SELECTOR, value=".storeSection div")
+print(test)
+'''
+def looker():
+    enables_list.clear()
+    for enables in driver.find_elements(By.CSS_SELECTOR, value=".storeSection div"):
+        if enables.get_attribute("class") == "product unlocked enabled":
+            price = driver.find_element(By.CSS_SELECTOR, value=".storeSection div div .price").text
+            enables_list.update({enables.get_attribute('id'):price})
+            print(enables_list)
+
+
+
+
 clicker_on = True
 while clicker_on:
     cookie.click()
+
     try:
-        schedule.every(5).seconds.do(product0.click())
+        schedule.every(10).seconds.do(looker())
     except:
         continue
     else:
         continue
-
-
-
-
-
-# driver.find_element(By.ID,value="bigCookie").click()
