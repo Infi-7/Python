@@ -10797,3 +10797,6 @@ header.masthead .post-heading .meta a {
   }
 }
 
+.post-heading{
+  text-align: center;
+}
