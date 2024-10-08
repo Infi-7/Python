@@ -2,13 +2,15 @@ from flask import *
 
 app = Flask(__name__)
 
-@app.route("/", methods=["POST", "GET"])
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+@app.route("/login", methods=["POST"])
 def login():
-    if request.method == 'POST':
-        full_name = str(request.form.get("username"))
-        password = str(request.form.get("password"))
-        return "Name is "+full_name+" and password is "+password
-    return render_template("login.html")
+    name = request.form["username"]
+    password = request.form["password"]
+    return f"<h1>Name: {name} , Password: {password}</h1>"
 
 
 if __name__ == "__main__":
