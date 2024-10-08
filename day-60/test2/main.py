@@ -1,8 +1,16 @@
 from flask import *
 import requests
+import smtplib
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+MY_EMAIL = os.getenv('EMAIL_ID')
+MY_PASSWORD = os.getenv('PASS')
 
 # USE YOUR OWN npoint LINK! ADD AN IMAGE URL FOR YOUR POST. 👇
-posts = requests.get("https://api.npoint.io/c790b4d5cab58020d391").json()
+posts = requests.get("https://api.npoint.io/a416bea3bde95c410766").json()
 
 app = Flask(__name__)
 
@@ -24,12 +32,23 @@ def contact():
         return render_template("contact.html", data=heading)
     elif request.method == 'POST':
         heading = 'Successfully sent your message'
-        name = request.form['name']
-        email = request.form['email']
-        number = request.form['phone']
-        message = request.form['message']
+        name = str(request.form['name'])
+        email = str(request.form['email'])
+        number = str(request.form['phone'])
+        message = str(request.form['message'])
 
-        print(f"Name: {name}, email: {email}, number: {number}, message: {message}")
+        MSG = f'Name: {name} \nEmail: {email} \nNumber: {number} \nMessage: {message}'
+        print(MSG)
+
+        connection = smtplib.SMTP("smtp.gmail.com")
+        connection.starttls()
+        connection.login(user=MY_EMAIL, password=MY_PASSWORD)
+        connection.sendmail(
+            from_addr=MY_EMAIL,
+            to_addrs=os.getenv('TO_ADDRESS'),
+            msg=f"Subject:Details.\n\n{MSG}")
+
+        connection.close()
 
         return render_template("contact.html", data=heading)
 
