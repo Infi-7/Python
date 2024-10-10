@@ -8,12 +8,12 @@
         <div class="container">
 		<h1>Login</h1>
         <!-- This is where our form will go. -->
-			<form method="post" action="{{ url_for('success') }}" novalidate>
+			<form method="post" action="{{ url_for('success') }}">
           		{{ form.csrf_token }}
 				  <p>
 					  {{ form.email.label }} {{ form.email(size=30) }}
 					  {% for err in form.email.errors %}
-					  <span style="color:red">{{ err }}</span>
+					  <span style="color:red;">{{ err }}</span>
 					  {% endfor %}
 				  </p>
 				  <p>
