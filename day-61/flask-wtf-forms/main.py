@@ -1,12 +1,8 @@
-from crypt import methods
-from tkinter.ttk import Button
-
-from dns.dnssec import validate
 from flask import *
 from flask_wtf import FlaskForm
-from wtforms.fields.simple import EmailField, PasswordField, SubmitField, StringField
 from wtforms.validators import DataRequired, Email, Length
 from wtforms import *
+from flask_bootstrap import Bootstrap5
 
 '''
 Red underlines? Install the required packages first: 
@@ -23,6 +19,7 @@ This will install the packages from requirements.txt for this project.
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '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'
+bootstrap = Bootstrap5(app)
 
 class LoginForm(FlaskForm):
     email = EmailField('Email', validators=[DataRequired(message='Email requirement not met'), Email(), Length(min=4)])
