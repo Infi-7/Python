@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+</head>
+<body>
+  <form method="POST" action="/" novalidate>
+    {{ form.csrf_token }}
+    {{ form.name.label }} {{ form.name(size=20) }}
+    {% for err in form.name.errors %}
+      <span style="color:red">{{ err }}</span>
+    {% endfor %}
+    </br>
+    <input type="submit" value="Go">
+</form>
+</body>
+</html>
