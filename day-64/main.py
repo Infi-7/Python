@@ -36,6 +36,13 @@ class Movie(db.Model):
 
 with app.app_context():
     db.create_all()
+
+
+class RateMovieForm(FlaskForm):
+    rating = StringField("Your Rating Out of 10 e.g. 7.5")
+    review = StringField("Your Review")
+    submit = SubmitField("Done")
+
 '''
 with app.app_context():
     second_movie = Movie(
@@ -54,10 +61,22 @@ with app.app_context():
 def home():
     with app.app_context():
         multi_entry = db.session.execute(db.select(Movie))
-        result = multi_entry.scalars().all()
+        result = multi_entry.scalars()
         # entry = db.session.execute(db.select(Movie).where(Movie.title == "Phone Booth")).scalar()
 
     return render_template("index.html", data=result)
+
+@app.route("/update", methods=["GET", "POST"])
+def update():
+    form = RateMovieForm()
+    movie_id = request.args.get("id")
+    movie = db.get_or_404(Movie, movie_id)
+    if form.validate_on_submit():
+        movie.rating = float(form.rating.data)
+        movie.review = form.review.data
+        db.session.commit()
+        return redirect(url_for('home'))
+    return render_template("edit.html", movie=movie, form=form)
 
 
 if __name__ == '__main__':
