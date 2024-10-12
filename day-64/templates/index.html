@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
-
 {% block title %}My Top 10 Movies{% endblock %}
 
 {% block content %}
 <div class="container">
   <h1 class="heading">My Top 10 Movies</h1>
   <p class="description">These are my all-time favourite movies.</p>
-{% for row in data: %}
+
+
+    {% for row in data: %}
   <div class="card" >
     <div class="front" style="background-image: url({{ row.img_url }});">
         <p class="large">{{ row.ranking }}</p>
@@ -18,12 +19,10 @@
             <label>{{ row.rating }}</label>
           <i class="fas fa-star star"></i>
         </div>
-          <p class="review">{{ row.review }}</p>
-        <p class="overview">
-            {{ row.description }}
-        </p>
+            <p class="review">{{ row.review }}</p>
+            <p class="overview">{{ row.description }}</p>
 
-        <a href="#" class="button">Update</a>
+        <a href={{url_for('update',id='movie.id')}} class="button">Update</a>
         <a href="#" class="button delete-button">Delete</a>
 
       </div>
