@@ -89,9 +89,6 @@ def add():
 
         response = requests.get(url, headers=headers, params=data)
         movie_data = response.json()['results']
-        for x in movie_data:
-            print(x)
-
         return render_template('select.html', data=movie_data)
 
     return render_template('add.html', form=form)
@@ -99,6 +96,30 @@ def add():
 @app.route('/select')
 def select():
     return render_template('select.html')
+
+@app.route('/find')
+def find():
+    movie_id = request.args.get("id")
+    if movie_id:
+        url_api_data = f'https://api.themoviedb.org/3/movie/{movie_id}'
+        url_image_data = f"https://api.themoviedb.org/3/movie/{movie_id}/images"
+        headers = {
+            "accept": "application/json",
+            "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyZWU3MWYwMzg4NDY0Mjk4NDYzNzZjNjNlNzk5ZjQzOSIsIm5iZiI6MTcyODgxNjY2NS40MTUyNjQsInN1YiI6IjY3MGJhMjVlYjE1ZDk3YjFhOTNjNzgzNSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.k63VWZ9tdC96h7zwkU_uRsTZFDjTj4tYmao0gT5ares"
+        }
+
+        response = requests.get(url_api_data,headers=headers).json()
+        new_movie = Movie(
+            title = response['title'],
+            year = response['release_date'].split("-")[0],
+            img_url = f"{url_image_data}{response['poster_path']}",
+            description = response['overview']
+        )
+        db.session.add(new_movie)
+        db.session.commit()
+        return redirect(url_for("home"))
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
