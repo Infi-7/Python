@@ -39,6 +39,10 @@ class RateMovieForm(FlaskForm):
     review = StringField("Your Review")
     submit = SubmitField("Done")
 
+class AddMovieForm(FlaskForm):
+    movie_title = StringField("Movie Title")
+    submit = SubmitField("Add Movie")
+
 @app.route("/")
 def home():
     result = db.session.execute(db.select(Movie))
@@ -57,6 +61,44 @@ def rate_movie():
         db.session.commit()
         return redirect(url_for('home'))
     return render_template("edit.html", movie=movie, form=form)
+
+@app.route("/delete")
+def delete():
+    movie_id = request.args.get('id')
+    movie = db.get_or_404(Movie, movie_id)
+    db.session.delete(movie)
+    db.session.commit()
+    return redirect(url_for('home'))
+
+@app.route("/add", methods=["GET", "POST"])
+def add():
+    form = AddMovieForm()
+    movie_title_request = form.movie_title.data
+    if form.validate_on_submit():
+
+        url = "https://api.themoviedb.org/3/search/movie"
+        headers = {
+            "accept": "application/json",
+            "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyZWU3MWYwMzg4NDY0Mjk4NDYzNzZjNjNlNzk5ZjQzOSIsIm5iZiI6MTcyODgxNjUyOC4wMzg0NzEsInN1YiI6IjY3MGJhMjVlYjE1ZDk3YjFhOTNjNzgzNSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.hEJvdYFKfif4jorlB87NVd5RRZ9UavyNxaNpSmj7ScE"
+        }
+
+        data = {
+            "query":f"{movie_title_request}",
+            "include_adult":"True",
+        }
+
+        response = requests.get(url, headers=headers, params=data)
+        movie_data = response.json()['results']
+        for x in movie_data:
+            print(x)
+
+        return render_template('select.html', data=movie_data)
+
+    return render_template('add.html', form=form)
+
+@app.route('/select')
+def select():
+    return render_template('select.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -6,8 +6,12 @@
 <div class="container">
     <h1 class="heading">Select Movie</h1>
   <p>
-    <a href="#"> MOVIE TITLE - MOVIE RELEASE DATE</a>
+      {% for entry in data: %}
+      <a href="#"> {{ entry.original_title }} - {{ entry.release_date }}</a><br>
+      {% endfor %}
+
   </p>
+
 
 </div>
 {% endblock %}
