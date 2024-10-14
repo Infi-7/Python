@@ -45,8 +45,14 @@ class AddMovieForm(FlaskForm):
 
 @app.route("/")
 def home():
-    result = db.session.execute(db.select(Movie))
-    all_movies = result.scalars()
+    result = db.session.execute(db.select(Movie).order_by(Movie.rating))
+    all_movies = result.scalars().all()
+    print(all_movies)
+
+    for i in range(len(all_movies)):
+        all_movies[i].ranking = len(all_movies) - i
+    db.session.commit()
+
     return render_template("index.html", movies=all_movies)
 
 # Adding the Update functionality
@@ -102,7 +108,7 @@ def find():
     movie_id = request.args.get("id")
     if movie_id:
         url_api_data = f'https://api.themoviedb.org/3/movie/{movie_id}'
-        url_image_data = f"https://api.themoviedb.org/3/movie/{movie_id}/images"
+        url_image_data = f"https://image.tmdb.org/t/p/w500"
         headers = {
             "accept": "application/json",
             "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyZWU3MWYwMzg4NDY0Mjk4NDYzNzZjNjNlNzk5ZjQzOSIsIm5iZiI6MTcyODgxNjY2NS40MTUyNjQsInN1YiI6IjY3MGJhMjVlYjE1ZDk3YjFhOTNjNzgzNSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.k63VWZ9tdC96h7zwkU_uRsTZFDjTj4tYmao0gT5ares"
