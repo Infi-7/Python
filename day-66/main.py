@@ -1,4 +1,5 @@
 from crypt import methods
+from http.client import responses
 from xxlimited_35 import error
 
 from flask import Flask, jsonify, render_template, request
@@ -158,7 +159,21 @@ def update_price(cafe_id):
 
 
 # HTTP DELETE - Delete Record
-
-
+@app.route("/report-closed/<int:cafe_id>", methods=['DELETE'])
+def report_closed(cafe_id):
+    api = request.args.get('api-key')
+    print(cafe_id)
+    print(api)
+    if api:
+        if api == 'TOPSECRETAPIKEY':
+            row_to_delete = db.get_or_404(Cafe, cafe_id)
+            db.session.delete(row_to_delete)
+            db.session.commit()
+        
+            return jsonify(response={"Success": "Successfully deleted the cafe."}), 200
+        else:
+            return jsonify(error = "Sorry, that's not allowed. Make sure you have the correct api_key"), 403
+    else:
+        return jsonify(error={"Not Found": "Sorry a cafe with that id was not found in the database."}), 404
 if __name__ == '__main__':
     app.run(debug=True, port=5002)
