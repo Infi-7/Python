@@ -1,5 +1,3 @@
-from crypt import methods
-
 from flask import Flask, render_template, redirect, url_for, request
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
@@ -9,7 +7,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired, URL
 from flask_ckeditor import CKEditor, CKEditorField
-from datetime import date
+import datetime
 
 '''
 Make sure the required packages are installed: 
@@ -25,6 +23,7 @@ This will install the packages from the requirements.txt for this project.
 '''
 
 app = Flask(__name__)
+ckeditor = CKEditor(app)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 Bootstrap5(app)
 
@@ -50,6 +49,13 @@ class BlogPost(db.Model):
 with app.app_context():
     db.create_all()
 
+class MakePostForm(FlaskForm):
+    title = StringField('Blog Post Title', validators=[DataRequired()])
+    subtitle = StringField('Subtitle', validators=[DataRequired()])
+    author = StringField('Your Name', validators=[DataRequired()])
+    img_url = StringField('Blog Image URL', validators=[DataRequired()])
+    body = CKEditorField('Blog Content', validators=[DataRequired()])
+
 
 @app.route('/',methods=['GET'])
 def get_all_posts():
@@ -72,6 +78,24 @@ def show_post(post_id):
 
 
 # TODO: add_new_post() to create a new blog post
+@app.route('/new-post', methods=['GET', 'POST'])
+def new_post():
+    form = MakePostForm()
+    if request.method == "POST":
+        if request.method == 'POST':
+            new_post = BlogPost(
+                title=request.form.get('title'),
+                subtitle=request.form.get('subtitle'),
+                author=request.form.get('author'),
+                img_url=request.form.get('img_url'),
+                body=request.form.get("body"),
+                date=datetime.datetime.now().strftime("%B %d, %Y")
+            )
+            db.session.add(new_post)
+            db.session.commit()
+            return redirect(url_for('get_all_posts'))
+
+    return render_template('make-post.html', form=form)
 
 # TODO: edit_post() to change an existing blog post
 
