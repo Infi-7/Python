@@ -1,5 +1,5 @@
 {% block content %} {% include "header.html" %}
-
+{% from 'bootstrap4/form.html' import render_field %}
 <!-- Page Header -->
 <header
   class="masthead"
@@ -25,6 +25,15 @@
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
         <!-- TODO:-Add CKEditor and render the form here -->
+        {{ ckeditor.load() }}
+        <form action="{{ url_for('new_post') }}" method="post">
+          {{ render_field(form.title) }}
+          {{ render_field(form.subtitle) }}
+          {{ render_field(form.author) }}
+          {{ render_field(form.img_url) }}
+          {{ render_field(form.body) }}
+          <input type="submit">
+        </form>
       </div>
     </div>
   </div>
