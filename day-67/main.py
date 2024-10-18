@@ -55,6 +55,7 @@ class MakePostForm(FlaskForm):
     author = StringField('Your Name', validators=[DataRequired()])
     img_url = StringField('Blog Image URL', validators=[DataRequired()])
     body = CKEditorField('Blog Content', validators=[DataRequired()])
+    submit = SubmitField("Submit Post")
 
 
 @app.route('/',methods=['GET'])
@@ -81,25 +82,51 @@ def show_post(post_id):
 @app.route('/new-post', methods=['GET', 'POST'])
 def new_post():
     form = MakePostForm()
-    if request.method == "POST":
-        if request.method == 'POST':
-            new_post = BlogPost(
-                title=request.form.get('title'),
-                subtitle=request.form.get('subtitle'),
-                author=request.form.get('author'),
-                img_url=request.form.get('img_url'),
-                body=request.form.get("body"),
-                date=datetime.datetime.now().strftime("%B %d, %Y")
-            )
-            db.session.add(new_post)
-            db.session.commit()
-            return redirect(url_for('get_all_posts'))
+    heading = "New Post"
+    if request.method == 'POST':
+        new_post = BlogPost(
+            title=request.form.get('title'),
+            subtitle=request.form.get('subtitle'),
+            author=request.form.get('author'),
+            img_url=request.form.get('img_url'),
+            body=request.form.get("body"),
+            date=datetime.datetime.now().strftime("%B %d, %Y")
+        )
 
-    return render_template('make-post.html', form=form)
+        db.session.add(new_post)
+        db.session.commit()
+        return redirect(url_for('get_all_posts'))
+
+    return render_template('make-post.html', form=form, post_heading=heading)
 
 # TODO: edit_post() to change an existing blog post
+@app.route('/edit/<int:post_id>', methods=['GET','POST'])
+def edit(post_id):
+    post = db.get_or_404(BlogPost, post_id)
+    form = MakePostForm(title=post.title,
+                        subtitle=post.subtitle,
+                        img_url=post.img_url,
+                        author=post.author,
+                        body=post.body,
+                        )
+    if request.method == "POST":
+        if form.validate_on_submit():
+            post.title = form.title.data
+            post.subtitle = form.subtitle.data
+            post.img_url = form.img_url.data
+            post.author = form.author.data
+            post.body = form.body.data
+
+            db.session.commit()
+            return redirect(url_for('show_post', post_id=post.id))
+
+    heading = "Edit Post"
+    return render_template('make-post.html', form=form, post=post, post_heading=heading, post_id=post.id)
 
 # TODO: delete_post() to remove a blog post from the database
+@app.route('/delete')
+def delete():
+    pass
 
 # Below is the code from previous lessons. No changes needed.
 @app.route("/about")
