@@ -69,9 +69,9 @@ def logout():
     pass
 
 
-@app.route('/download/<path:name>')
-def download(name):
-    return send_from_directory(app.config['./static/files/cheat_sheet.pdf'], name, as_attachment=True)
+@app.route('/download')
+def download():
+    return send_from_directory('static', path='./files/cheat_sheet.pdf')
 
 
 if __name__ == "__main__":
