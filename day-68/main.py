@@ -39,36 +39,39 @@ with app.app_context():
     db.create_all()
 
 
-@app.route('/')
+@app.route('/', methods=['GET','POST'])
 def home():
     return render_template("index.html")
 
 
 @app.route('/register', methods=['GET','POST'])
 def register():
+    error = None
     if request.method == 'POST':
-        hash_and_salted_password = generate_password_hash(
-            request.form.get('password'),
-            method='pbkdf2:sha256',
-            salt_length=8
-        )
-        print(hash_and_salted_password)
-        new_user = User(
-            email=request.form.get('email'),
-            name=request.form.get('name'),
-            password=hash_and_salted_password,
-        )
-
-        db.session.add(new_user)
-        db.session.commit()
-
-        login_user(new_user)
-        return render_template('secrets.html', display_name=new_user.name)
-    return render_template("register.html")
+        email = request.form.get('email')
+        if db.session.execute(db.select(User).where(User.email == email)).scalar() == None:
+            hash_and_salted_password = generate_password_hash(
+                request.form.get('password'),
+                method='pbkdf2:sha256',
+                salt_length=8
+            )
+            new_user = User(
+                email=request.form.get('email'),
+                name=request.form.get('name'),
+                password=hash_and_salted_password,
+            )
+            db.session.add(new_user)
+            db.session.commit()
+            login_user(new_user)
+            return render_template('secrets.html', display_name=new_user.name, error=error)
+        else:
+            error = 'Email already exists'
+    return render_template("register.html", error=error)
 
 
 @app.route('/login',methods=['GET','POST'])
 def login():
+    error = None
     if request.method == 'POST':
         user_email = request.form.get('email')
         user_password = request.form.get('password')
@@ -76,9 +79,12 @@ def login():
             db_data = db.session.execute(db.select(User).where(User.email==user_email)).scalar()
             session['username'] = db_data.name
             if check_password_hash(db_data.password, user_password):
+                flash('You were successfully logged in')
                 login_user(db_data)
                 return redirect(url_for('secrets'))
-    return render_template("login.html")
+            else:
+                error = 'Invalid credentials'
+    return render_template("login.html", error=error)
 
 
 @app.route('/secrets')
@@ -99,4 +105,4 @@ def download():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5003)
+    app.run(debug=True, port=5010)
