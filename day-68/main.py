@@ -41,7 +41,7 @@ with app.app_context():
 
 @app.route('/', methods=['GET','POST'])
 def home():
-    return render_template("index.html")
+    return render_template("index.html", logged_in=current_user.is_authenticated)
 
 
 @app.route('/register', methods=['GET','POST'])
@@ -66,7 +66,8 @@ def register():
             return render_template('secrets.html', display_name=new_user.name, error=error)
         else:
             error = 'Email already exists'
-    return render_template("register.html", error=error)
+            return redirect('login')
+    return render_template("register.html", error=error, logged_in=current_user.is_authenticated)
 
 
 @app.route('/login',methods=['GET','POST'])
@@ -84,7 +85,7 @@ def login():
                 return redirect(url_for('secrets'))
             else:
                 error = 'Invalid credentials'
-    return render_template("login.html", error=error)
+    return render_template("login.html", error=error, logged_in=current_user.is_authenticated)
 
 
 @app.route('/secrets')
