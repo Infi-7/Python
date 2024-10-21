@@ -9,8 +9,8 @@ from flask_ckeditor import CKEditor
 from flask_gravatar import Gravatar
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import Integer, String, Text
+from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column, foreign
+from sqlalchemy import Integer, String, Text, ForeignKey
 from functools import wraps
 
 from urllib3 import request
@@ -63,6 +63,14 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/infi/Documents/day-69/p
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
+# TODO: Create a User table for all your registered users.
+class User(UserMixin,db.Model):
+    __tablename__ = "users"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(250))
+    email: Mapped[str] = mapped_column(String(250), nullable=False)
+    password: Mapped[str] = mapped_column(String(250))
+    posts = relationship("BlogPost", back_populates="author")
 
 # CONFIGURE TABLES
 class BlogPost(db.Model):
@@ -72,17 +80,11 @@ class BlogPost(db.Model):
     subtitle: Mapped[str] = mapped_column(String(250), nullable=False)
     date: Mapped[str] = mapped_column(String(250), nullable=False)
     body: Mapped[str] = mapped_column(Text, nullable=False)
-    author: Mapped[str] = mapped_column(String(250), nullable=False)
+
+    author_id:Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
+    author:Mapped["User"] = relationship(back_populates="posts")
+
     img_url: Mapped[str] = mapped_column(String(250), nullable=False)
-
-
-# TODO: Create a User table for all your registered users.
-class User(UserMixin,db.Model):
-    __tablename__ = "users"
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    name: Mapped[str] = mapped_column(String(250), nullable=False)
-    email: Mapped[str] = mapped_column(String(250), nullable=False)
-    password: Mapped[str] = mapped_column(String(250), nullable=False)
 
 with app.app_context():
     db.create_all()
@@ -91,6 +93,7 @@ with app.app_context():
 def get_all_posts():
     result = db.session.execute(db.select(BlogPost))
     posts = result.scalars().all()
+    print(posts)
     return render_template("index.html", all_posts=posts, logged_in=current_user.is_authenticated)
 
 
