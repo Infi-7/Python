@@ -7,13 +7,14 @@ from flask import *
 from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
 from flask_gravatar import Gravatar
-from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user
+from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Text
 from functools import wraps
 
 from urllib3 import request
+from werkzeug.exceptions import Forbidden
 from werkzeug.security import generate_password_hash, check_password_hash
 from wtforms.validators import email
 
@@ -47,6 +48,13 @@ login_manager.init_app(app)
 def load_user(user_id):
     return db.get_or_404(User, user_id)
 
+def admin_only(func):
+    @wraps(func)
+    def checker(*args, **kwargs):
+        if current_user.id != 1:
+            return abort(403)
+        return func(*args, **kwargs)
+    return checker
 
 # CREATE DATABASE
 class Base(DeclarativeBase):
@@ -69,7 +77,7 @@ class BlogPost(db.Model):
 
 
 # TODO: Create a User table for all your registered users.
-class User(db.Model):
+class User(UserMixin,db.Model):
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(250), nullable=False)
@@ -108,6 +116,7 @@ def register():
             db.session.commit()
             login_user(new_user)
             print("New user created")
+            return redirect('login')
         else:
             error = 'Email already exists! Please login'
     return render_template("register.html", form=form)
@@ -121,12 +130,14 @@ def login():
     if form.validate_on_submit():
         email = form.email.data
         email_checker = db.session.execute(db.select(User).where(User.email==email)).scalar()
-        print(email_checker)
         if email_checker is not None:
             password = form.password.data
             if check_password_hash(email_checker.password, password):
-                print('You are logged in!')
+                role = email_checker.id
+                print(type(role))
                 flash('You are logged in!')
+                login_user(email_checker)
+                return redirect(url_for('get_all_posts',role=role))
             else:
                 error = "Incorrect Password"
         else:
@@ -135,11 +146,10 @@ def login():
 
 
 @app.route('/logout')
+@login_required
 def logout():
+    logout_user()
     return redirect(url_for('get_all_posts'))
-
-
-
 
 
 # TODO: Allow logged-in users to comment on posts
@@ -151,6 +161,7 @@ def show_post(post_id):
 
 # TODO: Use a decorator so only an admin user can create a new post
 @app.route("/new-post", methods=["GET", "POST"])
+@admin_only
 def add_new_post():
     form = CreatePostForm()
     if form.validate_on_submit():
@@ -170,6 +181,7 @@ def add_new_post():
 
 # TODO: Use a decorator so only an admin user can edit a post
 @app.route("/edit-post/<int:post_id>", methods=["GET", "POST"])
+@admin_only
 def edit_post(post_id):
     post = db.get_or_404(BlogPost, post_id)
     edit_form = CreatePostForm(
@@ -192,6 +204,7 @@ def edit_post(post_id):
 
 # TODO: Use a decorator so only an admin user can delete a post
 @app.route("/delete/<int:post_id>")
+@admin_only
 def delete_post(post_id):
     post_to_delete = db.get_or_404(BlogPost, post_id)
     db.session.delete(post_to_delete)
