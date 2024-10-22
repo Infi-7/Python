@@ -71,6 +71,7 @@ class User(UserMixin,db.Model):
     email: Mapped[str] = mapped_column(String(250), nullable=False)
     password: Mapped[str] = mapped_column(String(250))
     posts = relationship("BlogPost", back_populates="author")
+    comments = relationship("Comment", back_populates="comment_author")
 
 # CONFIGURE TABLES
 class BlogPost(db.Model):
@@ -84,12 +85,20 @@ class BlogPost(db.Model):
     author_id:Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
     author:Mapped["User"] = relationship(back_populates="posts")
 
+    comments = relationship("Comment", back_populates="parent_post")
+
     img_url: Mapped[str] = mapped_column(String(250), nullable=False)
 
 class Comment(db.Model):
     __tablename__ = "comments"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     comment: Mapped[str] = mapped_column(Text, nullable=False)
+
+    author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
+    comment_author:Mapped["User"] = relationship(back_populates="comments")
+
+    post_id:Mapped[int] = mapped_column(Integer, db.ForeignKey("blog_posts.id"))
+    parent_post = relationship("BlogPost", back_populates="comments")
 
 with app.app_context():
     db.create_all()
