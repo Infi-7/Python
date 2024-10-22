@@ -86,6 +86,11 @@ class BlogPost(db.Model):
 
     img_url: Mapped[str] = mapped_column(String(250), nullable=False)
 
+class Comment(db.Model):
+    __tablename__ = "comments"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    comment: Mapped[str] = mapped_column(Text, nullable=False)
+
 with app.app_context():
     db.create_all()
 
@@ -159,7 +164,8 @@ def logout():
 @app.route("/post/<int:post_id>")
 def show_post(post_id):
     requested_post = db.get_or_404(BlogPost, post_id)
-    return render_template("post.html", post=requested_post)
+    current_form = CommentForm()
+    return render_template("post.html", post=requested_post, current_user=current_user, form=current_form)
 
 
 # TODO: Use a decorator so only an admin user can create a new post
@@ -226,4 +232,4 @@ def contact():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5002)
+    app.run(debug=True, port=5010)
