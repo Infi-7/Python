@@ -1,9 +1,8 @@
-from crypt import methods
+import os
 from datetime import date
-from logging import error
-
 import werkzeug.security
 from flask import *
+from flask.cli import load_dotenv
 from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
 from flask_gravatar import Gravatar
@@ -12,11 +11,10 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column, foreign
 from sqlalchemy import Integer, String, Text, ForeignKey
 from functools import wraps
+from dotenv import load_dotenv
 
-from urllib3 import request
-from werkzeug.exceptions import Forbidden
 from werkzeug.security import generate_password_hash, check_password_hash
-from wtforms.validators import email
+
 
 # Import your forms from the forms.py
 from forms import *
@@ -34,9 +32,9 @@ pip3 install -r requirements.txt
 
 This will install the packages from the requirements.txt for this project.
 '''
-
+load_dotenv()
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+app.config['SECRET_KEY'] = os.environ.get('FLASK_KEY')
 ckeditor = CKEditor(app)
 Bootstrap5(app)
 
@@ -68,7 +66,7 @@ def admin_only(func):
 # CREATE DATABASE
 class Base(DeclarativeBase):
     pass
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/infi/Documents/day-69/posts.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URI")
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
