@@ -1,0 +1,19 @@
+.outer_index_div {
+    background:black;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.inner_index_div {
+    color:white;
+    text-align:center;
+}
+
+.pdf_display{
+    background:black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
