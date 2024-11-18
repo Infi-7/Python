@@ -7,6 +7,8 @@ import mysql.connector
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'QYBj6FS58voHmmINudew'
 
+projects_list = []
+
 class ContactForm(FlaskForm):
     f_name = StringField('First Name', validators=[DataRequired()])
     l_name = StringField('Last Name', validators=[DataRequired()])
@@ -14,13 +16,47 @@ class ContactForm(FlaskForm):
     text = TextAreaField()
     submit = SubmitField()
 
+mydb = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  password="root",
+  database="mydatabase"
+)
+
+mycursor = mydb.cursor()
+mycursor.execute('select * from projects')
+myresult = mycursor.fetchall()
+
+for project in myresult:
+  projects_list.append(project)
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
 @app.route('/projects')
 def projects():
-    return render_template('projects.html')
+    inner = []
+    outer = []
+    count = 0
+    len_projects_list = len(projects_list)
+    x=3
+
+    for c in range(len_projects_list):
+        if count < x:
+            inner.append(c)
+            count += 1
+        elif count == x:
+            outer.append(inner)
+            inner = []
+            inner.append(c)
+            count = 1
+        if c == len_projects_list - 1 and len(inner) != 0:
+            outer.append(inner)
+            inner = []
+
+    print(outer)
+    return render_template('projects.html', projects=outer,rows = len(outer), project_list = projects_list)
 
 @app.route('/contact', methods=['GET','POST'])
 def contact():

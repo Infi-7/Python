@@ -89,7 +89,7 @@ ion-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    height:90vh;
+    height:70vh;
 }
 
 .card-body{
@@ -98,7 +98,7 @@ ion-icon {
     background:black;
 }
 
-.card-body h5{
+.card-body h3{
     color:white;
 }
 
