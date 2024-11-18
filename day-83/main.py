@@ -9,13 +9,6 @@ app.config['SECRET_KEY'] = 'QYBj6FS58voHmmINudew'
 
 projects_list = []
 
-class ContactForm(FlaskForm):
-    f_name = StringField('First Name', validators=[DataRequired()])
-    l_name = StringField('Last Name', validators=[DataRequired()])
-    email = EmailField(validators=[Email()])
-    text = TextAreaField()
-    submit = SubmitField()
-
 mydb = mysql.connector.connect(
   host="localhost",
   user="root",
@@ -40,28 +33,46 @@ def projects():
     outer = []
     count = 0
     len_projects_list = len(projects_list)
-    x=3
+    breaker = 3
 
-    for c in range(len_projects_list):
-        if count < x:
-            inner.append(c)
+    for project_count in range(len_projects_list):
+        if count < breaker:
+            inner.append(project_count)
             count += 1
-        elif count == x:
+        elif count == breaker:
             outer.append(inner)
             inner = []
-            inner.append(c)
+            inner.append(project_count)
             count = 1
-        if c == len_projects_list - 1 and len(inner) != 0:
+        if project_count == len_projects_list - 1 and len(inner) != 0:
             outer.append(inner)
             inner = []
-
-    print(outer)
     return render_template('projects.html', projects=outer,rows = len(outer), project_list = projects_list)
 
 @app.route('/contact', methods=['GET','POST'])
 def contact():
-    contact_form = ContactForm()
-    return render_template('contact.html', form=contact_form)
+    if request.method == 'POST':
+        fname = request.form.get('f_name')
+        lname = request.form.get('l_name')
+        email = str(request.form.get('email'))
+        text = str(request.form.get('text'))
+
+        mycursor.execute('select QueryID from userquery order by QueryID desc limit 1')
+        myresult_query = mycursor.fetchall()
+        print(myresult_query[0][0])
+        index = 0
+        if myresult_query[0][0] == 0:
+            index = 1
+        else:
+            index = myresult_query[0][0] + 1
+
+        print(index)
+
+
+        mycursor.execute("INSERT INTO userquery VALUES (%s,%s,%s,%s,%s)", (index, fname, lname, email,text))
+        mydb.commit()
+        print(index,fname,lname,email,text)
+    return render_template('contact.html')
 
 @app.route('/resume')
 def resume():
