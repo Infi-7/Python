@@ -18,8 +18,6 @@ entry_dict = {
     9: [2, 2],
 }
 
-player_sym = {}
-
 #take player names
 def player_names():
     player1 = str(input("Enter your name (Player 1): "))
@@ -50,11 +48,18 @@ def switcher():
     elif CURRENT_TURN == 1:
         NEXT_TURN = CURRENT_TURN - 1
 
+def checker(x_list, o_list):
+    xlist = x_list.sort()
+    olist = o_list.sort()
+    print(f'x list is {xlist},{olist}')
+
 
 # Game Logic
 def main():
     global TURNS_REMAINING, CURRENT_TURN
     game = [['-','-','-'],['-','-','-'],['-','-','-']]
+    x_list=[]
+    o_list= []
     win_seq = [[]]
     player_names()
     assign_sign()
@@ -65,13 +70,17 @@ def main():
             user_input = int(input(f'{NAMES[CURRENT_TURN]} enter your input: '))
 
             if user_input not in available_locations:
+                print("Invalid Input!")
                 input_validator()
             else:
-                player_sym.get(f'NAMES[CURRENT_TURN]')
                 if CURRENT_TURN == 0:
                     symbol = 'X'
+                    x_list.append(user_input)
+                    print(f'X inputs are --> {x_list}')
                 elif CURRENT_TURN == 1:
                     symbol = 'O'
+                    o_list.append(user_input)
+                    print(f'O inputs are --> {o_list}')
                 game[entry_dict.get(user_input)[0]][entry_dict.get(user_input)[1]] = symbol
                 for x in game:
                     print(*x, sep=' | ')
