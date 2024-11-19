@@ -17,3 +17,91 @@
     align-items: center;
     justify-content: center;
 }
+
+.contact-outer-div{
+    background:black;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contact-inner-div{
+    color:white;
+    font-size:30px;
+    text-align:center;
+    background:black;
+}
+
+a{
+    text-decoration:none;
+}
+
+.collapse-content{
+    background:black;
+    color:white;
+}
+
+ion-icon {
+  color: white;
+}
+
+.container{
+    display:flex;
+    width:100vw;
+}
+
+.form{
+    width:50vw;
+    height:auto;
+    font-size:15pt;
+}
+
+.links{
+    width:50vw;
+}
+
+.links h2{
+    height:10%;
+}
+.links-link{
+    height:89%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form div{
+    padding:5px 0px 5px 0px
+}
+
+.form .div-submit{
+    padding-bottom:10px;
+}
+
+.projects-body{
+
+    width:100vw;
+    background:black;
+}
+
+.row{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height:70vh;
+}
+
+.card-body{
+    text-align:center;
+    border:1px solid white;
+    background:black;
+}
+
+.card-body h3{
+    color:white;
+}
+
+.card-body p{
+    color:white;
+}

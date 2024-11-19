@@ -46,6 +46,7 @@ def switcher():
     elif CURRENT_TURN == 1:
         NEXT_TURN = CURRENT_TURN - 1
 
+
 def check(lst):
     checker = []
     is_winner = None
@@ -64,7 +65,6 @@ def check(lst):
         else:
             checker = []
     return is_winner
-
 
 # Game Logic
 def main():
