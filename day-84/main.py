@@ -1,7 +1,3 @@
-import random
-import os
-from zoneinfo import available_timezones
-
 CURRENT_TURN = None
 NEXT_TURN = None
 NAMES = []
@@ -17,6 +13,8 @@ entry_dict = {
     8: [2, 1],
     9: [2, 2],
 }
+win_seq = [[1,2,3],[4,5,6],[7,8,9],[1,4,7],[2,5,8],[3,6,9],[1,5,9],[3,5,7]]
+available_locations = list(entry_dict.keys())
 
 #take player names
 def player_names():
@@ -48,10 +46,24 @@ def switcher():
     elif CURRENT_TURN == 1:
         NEXT_TURN = CURRENT_TURN - 1
 
-def checker(x_list, o_list):
-    xlist = x_list.sort()
-    olist = o_list.sort()
-    print(f'x list is {xlist},{olist}')
+def check(lst):
+    checker = []
+    is_winner = None
+
+    for seq in win_seq:
+        for itr in range(3):
+
+            if seq[itr] in lst:
+                checker.append(seq[itr])
+            else:
+                continue
+
+        if len(checker) == 3 and checker == seq:
+            is_winner = 'True'
+            break
+        else:
+            checker = []
+    return is_winner
 
 
 # Game Logic
@@ -60,10 +72,13 @@ def main():
     game = [['-','-','-'],['-','-','-'],['-','-','-']]
     x_list=[]
     o_list= []
-    win_seq = [[]]
+    win_seq = [[1,2,3],[4,5,6],[7,8,9],[1,4,7],[2,5,8],[3,6,9],[1,5,9],[3,5,7]]
     player_names()
     assign_sign()
-    available_locations = list(entry_dict.keys())
+    for x in game:
+        print(*x, sep=' | ')
+        print('---------')
+
     while TURNS_REMAINING > 0:
         def input_validator():
             print(f'Available Locations --> {available_locations}')
@@ -76,11 +91,9 @@ def main():
                 if CURRENT_TURN == 0:
                     symbol = 'X'
                     x_list.append(user_input)
-                    print(f'X inputs are --> {x_list}')
                 elif CURRENT_TURN == 1:
                     symbol = 'O'
                     o_list.append(user_input)
-                    print(f'O inputs are --> {o_list}')
                 game[entry_dict.get(user_input)[0]][entry_dict.get(user_input)[1]] = symbol
                 for x in game:
                     print(*x, sep=' | ')
@@ -91,5 +104,15 @@ def main():
         switcher()
         CURRENT_TURN = NEXT_TURN
         TURNS_REMAINING = TURNS_REMAINING - 1
+        if TURNS_REMAINING <= 5:
+            if check(x_list) == 'True':
+                print(f'{NAMES[0]} with Symbol X is the Winner!')
+                break
+            if check(o_list) == 'True':
+                print(f'{NAMES[1]} with Symbol O is the Winner!')
+                break
+
+        if TURNS_REMAINING == 0:
+            print('Draw!!')
 
 main()
