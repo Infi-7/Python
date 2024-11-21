@@ -1,19 +1,10 @@
-import tkinter
 from tkinter import *
 from PIL import ImageTk, Image, ImageDraw, ImageFont
 from tkinter import filedialog
 
 PADDING = 30
-WIDTH = 700
-HEIGHT = 400
-
-# Positions for watermark placement
-positions = {
-    "Top Left": (10, 10),
-    "Top Right": (WIDTH - 10, 10),
-    "Bottom Left": (10, HEIGHT - 30),
-    "Bottom Right": (WIDTH - 10, HEIGHT - 30)
-}
+WIN_WIDTH = 700
+WIN_HEIGHT = 500
 
 # Global variable to store the loaded image
 loaded_image = None
@@ -29,14 +20,14 @@ def import_file():
         print("Image successfully selected")
         print(f"Image Path is: {file_path}")
         loaded_image = Image.open(file_path)
-        loaded_image.thumbnail((WIDTH, HEIGHT))  # Resize to fit canvas
+        loaded_image.thumbnail((WIN_WIDTH, WIN_HEIGHT))  # Resize to fit canvas
 
         # Convert for display in Tkinter
         img_tk = ImageTk.PhotoImage(loaded_image)
 
         # Store and display the image
         canvas.image = img_tk
-        canvas.create_image(WIDTH // 2, HEIGHT // 2, image=img_tk)
+        canvas.create_image(img_tk.width() / 2, img_tk.height() / 2, image=img_tk)
         print("Image displayed successfully")
 
         # Enable watermark button
@@ -46,6 +37,7 @@ def import_file():
 
 
 def add_watermark():
+    global image_displayed
     global loaded_image
     if loaded_image is None:
         print("No image loaded.")
@@ -55,34 +47,44 @@ def add_watermark():
     watermark_text = text.get("1.0", END).strip()
     loc = clicked.get()
 
+    temp_img = ImageTk.PhotoImage(loaded_image)
+
+    positions={
+        "Top Left":(10,10),
+        "Top Right":(temp_img.width() - 150, 10),
+        "Bottom Left":(10, temp_img.height() - 90),
+        "Bottom Right": (temp_img.width() - 150, temp_img.height() - 90)
+    }
+
     # Ensure a valid watermark text and position are provided
     if not watermark_text or loc not in positions:
         print("Invalid input for watermark text or position.")
         return
 
-    print(f"Adding watermark: '{watermark_text}' at {loc}")
+    print(f"Adding watermark: '{watermark_text}' at {positions[loc]}")
 
     # Add watermark
     draw = ImageDraw.Draw(loaded_image)
-    font = ImageFont.truetype("arial.ttf", 20)  # Use a standard font; replace if unavailable
+    font = ImageFont.truetype("fonts/Inktype.ttf", 20)  # Use a standard font; replace if unavailable
     position = positions[loc]
     draw.text(position, watermark_text, fill="white", font=font)
 
     # Update display with watermarked image
     img_tk = ImageTk.PhotoImage(loaded_image)
+    image_displayed = img_tk
     canvas.image = img_tk
-    canvas.create_image(WIDTH // 2, HEIGHT // 2, image=img_tk)
+    canvas.create_image(img_tk.width() / 2, img_tk.height() / 2, image=img_tk)
     print("Watermark added successfully!")
 
 
 # Initialize main window
 window = Tk()
 window.title('WaterMarker')
-window.minsize(400, 250)
-window.config(width=700, height=500, padx=PADDING, pady=PADDING, bg='black')
+window.minsize(WIN_WIDTH // 2, WIN_HEIGHT // 2)
+window.config(width=WIN_WIDTH, height=WIN_HEIGHT, padx=PADDING, pady=PADDING, bg='black')
 
 # Canvas for displaying image
-canvas = Canvas(window, bg='white', height=HEIGHT, width=WIDTH)
+canvas = Canvas(window, bg='white', height=400, width=600)
 canvas.grid(row=0, column=0)
 
 # Frame for buttons
