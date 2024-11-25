@@ -2,17 +2,20 @@ from time import sleep
 from turtle import *
 
 game_on = True
+win = Screen()
 
 class Game:
+
     def __init__(self):
         self.score = 0
         self.lives = 3
+        self.player_turtle = Turtle()
 
     def window_create(self) -> None:
-        win = Screen()
         win.setup(510, 500)
         win.title("Mic test")
         win.bgcolor("black")
+        win.tracer(0)
 
     def turtle_settings(self):
         tur = Turtle()
@@ -37,22 +40,43 @@ class Game:
             tur.goto(x_pos,tur.ycor() - 20)
             tur.pendown()
 
-
     def player(self):
-        player_turtle = Turtle()
-        player_turtle.color("white")
-        player_turtle.shape("square")
-        player_turtle.shapesize(stretch_len=5)
-        player_turtle.penup()
-        player_turtle.goto(0,-220)
+        self.player_turtle.color("white")
+        self.player_turtle.shape("square")
+        self.player_turtle.shapesize(stretch_len=5)
+        self.player_turtle.penup()
+        self.player_turtle.goto(0,-220)
+
+    def move_left(self):
+        x_pos = self.player_turtle.xcor()
+        x_pos -= 20
+
+        if x_pos < -200:
+            self.player_turtle.setx(-200)
+        else:
+            self.player_turtle.setx(x_pos)
+
+    def move_right(self):
+        x_pos = self.player_turtle.xcor()
+        x_pos += 20
+
+        if x_pos > 200:
+            self.player_turtle.setx(200)
+        else:
+            self.player_turtle.setx(x_pos)
+
+    def run(self):
+        self.player()
+        while game_on:
+            win.update()
+            sleep(0.01)
 
 start = Game()
 start.window_create()
 start.turtle_settings()
 
+win.listen()
+win.onkeypress(start.move_left,"Left")
+win.onkeypress(start.move_right, "Right")
 
-while game_on:
-
-    start.player()
-    sleep(60)
-    game_on = False
+start.run()
