@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add-Cafe</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="{{ url_for('static', filename='../static/styles.css')}}">
+</head>
+<body>
+
+<!-- Nav Bar -->
+<div class="topnav">
+  <!-- Centered link -->
+  <div class="topnav-centered">
+    <a href="{{ url_for('index') }}" class="active">
+      <img src="./static/logo.png" alt="" width="100" height="50">
+    </a>
+  </div>
+
+  <!-- Right-aligned links -->
+
+  <div class="topnav-right">
+    {% if not logged_in: %}
+      <a href="{{ url_for('signup') }}">SignUp</a>
+      <a href="{{ url_for('login') }}">Login</a>
+    {% else %}
+      <a href="{{ url_for('logout') }}">Logout</a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="registration-form">
+  <form action="{{ url_for('add') }}" method="POST">
+    <div class="form-icon">
+        <span><ion-icon name="cafe-outline"></ion-icon></span>
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control item" id="name" name="name" placeholder="Cafe Name">
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control item" id="location" name="location" placeholder="Location">
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control item" id="coffee_price" name="coffee_price" placeholder="Coffee price">
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control item" id="seats" name="seats" placeholder="Seat Count">
+    </div>
+    <div class="form-group">
+        <input type="url" class="form-control item" id="map_url" name="map_url" placeholder="Google Map Link">
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control item" id="img_url" name="img_url" placeholder="Image Link">
+    </div>
+    <div class="form-check-group">
+    <input type="checkbox" id="Wifi" name="has_wifi" value="Wifi">
+    <label for="Wifi">Wifi</label>
+    <input type="checkbox" id="Socket" name="has_sockets" value="Socket">
+    <label for="Socket">Socket</label>
+    <input type="checkbox" id="Calls" name="can_take_calls" value="Calls">
+    <label for="Calls">Calls</label>
+    <input type="checkbox" id="Restroom" name="has_toilet" value="Restroom">
+    <label for="Restroom">Restroom</label></br>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-block create-account">Submit</button>
+    </div>
+  </form>
+</div>
+
+<footer class="py-3 my-4">
+  <p class="text-center text-body-secondary">© 2024 Open Coffee</p>
+</footer>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+</body>
+</html>

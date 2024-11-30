@@ -100,40 +100,31 @@ def login():
                 error = 'Invalid credentials'
     return render_template("login.html", error=error, logged_in=current_user.is_authenticated)
 
-@app.route('/add-cafe', methods=['GET','POST'])
-def add_cafe():
+
+@app.route('/add', methods=['GET','POST'])
+@login_required
+def add():
     if request.method == 'POST':
-
-        name=request.form.get('name')
-        map_url=request.form.get('map_url')
-        img_url=request.form.get('img_url')
-        location=request.form.get('location')
-        seats=request.form.get('seats')
-        has_toilet=bool(request.form.get('has_toilet'))
-        has_wifi=bool(request.form.get('has_wifi'))
-        has_sockets=bool(request.form.get('has_sockets'))
-        can_take_calls=bool(request.form.get('can_take_calls'))
-        coffee_price=request.form.get('coffee_price')
-
         payload = {
-            'name': name,
-            'map_url': map_url,
-            'img_url': img_url,
-            'location': location,
-            'seats': seats,
-            'has_toilet': has_toilet,
-            'has_wifi': has_wifi,
-            'has_sockets': has_sockets,
-            'can_take_calls': can_take_calls,
-            'coffee_price': coffee_price
+            'name': request.form.get('name'),
+            'map_url': request.form.get('map_url'),
+            'img_url': request.form.get('img_url'),
+            'location': request.form.get('location'),
+            'seats': request.form.get('seats'),
+            'has_toilet': bool(request.form.get('has_toilet')),
+            'has_wifi': bool(request.form.get('has_wifi')),
+            'has_sockets': bool(request.form.get('has_sockets')),
+            'can_take_calls': bool(request.form.get('can_take_calls')),
+            'coffee_price': request.form.get('coffee_price')
         }
 
 
         response = requests.post(os.environ['api_link'] + "all", json=payload)
         return response.content, response.status_code, response.headers.items()
-    return render_template("add-cafe.html")
+    return render_template("add-cafe.html", logged_in=current_user.is_authenticated)
 
 @app.route('/logout', methods=['GET','POST'])
+@login_required
 def logout():
     logout_user()
     return redirect(url_for('index'))
