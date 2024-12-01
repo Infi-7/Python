@@ -101,9 +101,9 @@ def login():
     return render_template("login.html", error=error, logged_in=current_user.is_authenticated)
 
 
-@app.route('/add', methods=['GET','POST'])
+@app.route("/add-cafe",methods=['GET','POST'])
 @login_required
-def add():
+def add_cafe():
     if request.method == 'POST':
         payload = {
             'name': request.form.get('name'),
@@ -115,12 +115,17 @@ def add():
             'has_wifi': bool(request.form.get('has_wifi')),
             'has_sockets': bool(request.form.get('has_sockets')),
             'can_take_calls': bool(request.form.get('can_take_calls')),
-            'coffee_price': request.form.get('coffee_price')
+            'coffee_price': request.form.get('coffee_price'),
         }
 
-
-        response = requests.post(os.environ['api_link'] + "all", json=payload)
-        return response.content, response.status_code, response.headers.items()
+        response = requests.post(os.environ['api_link'] + "add", data=payload)
+        if response.status_code == 200:
+            # Redirect to a specific page, e.g., index or success page
+            flash("Cafe added successfully!")
+            return redirect(url_for('index'))  # Change 'index' to your desired route
+        else:
+            flash("Failed to add cafe. Please try again.")
+            return render_template("add-cafe.html", logged_in=current_user.is_authenticated)
     return render_template("add-cafe.html", logged_in=current_user.is_authenticated)
 
 @app.route('/logout', methods=['GET','POST'])
