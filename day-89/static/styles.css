@@ -95,13 +95,15 @@ body{
 }
 
 .registration-form form{
-    background-color: #fff;
-    max-width: 600px;
-    margin: auto;
-    padding: 50px 70px;
-    border-top-left-radius: 30px;
-    border-top-right-radius: 30px;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.075);
+  background-color: #fff;
+  max-width: 400px;
+  margin: auto;
+  padding: 50px 70px;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.075);
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
 }
 
 .registration-form .form-icon{
@@ -201,4 +203,29 @@ body{
 .form-check-group{
     display:flex;
     justify-content: space-evenly;
+}
+
+.row {
+  display: flex;
+}
+
+.column {
+  flex: 50%;
+}
+
+.column2 {
+    text-align:center;
+    padding-top:10%
+}
+
+ul.myUL {
+  display: inline-block;
+  text-align: left;
+}
+
+.index-body{
+  background-image: url("landing-page.png");
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
