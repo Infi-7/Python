@@ -1,7 +1,8 @@
 import os
+import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy import Integer, String
 from flask import *
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
@@ -33,13 +34,24 @@ class User(UserMixin, db.Model):
     email: Mapped[str] = mapped_column(String(100), unique=True)
     password: Mapped[str] = mapped_column(String(100))
 
+    tasks = relationship("Task", back_populates="author")
+
+class Task(db.Model):
+    __tablename__ = "tasks"
+    id:Mapped[int]=mapped_column(Integer, primary_key=True)
+    date:Mapped[str]=mapped_column(String(250), nullable=False)
+    tasks:Mapped[str]=mapped_column(String(250), nullable=False)
+
+    author_id:Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
+    author:Mapped["User"] = relationship(back_populates="tasks")
+
 with app.app_context():
     db.create_all()
 
 app.route("/index", methods=['GET','POST'])
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", logged_in=current_user.is_authenticated)
 
 @app.route("/signup", methods=['GET','POST'])
 def signup():
@@ -96,7 +108,25 @@ def login():
 @app.route("/add",methods=['GET','POST'])
 @login_required
 def add():
-    return render_template("add.html")
+    min_date = datetime.date.today()
+    result = db.session.execute(db.select(Task).where((Task.author_id==current_user.id) & (Task.date==min_date))).scalars().all()
+
+    if request.method == 'POST':
+        new_task = Task(
+            date = request.form.get('date'),
+            tasks = request.form.get('task'),
+            author = current_user,
+        )
+        db.session.add(new_task)
+        db.session.commit()
+        return redirect('add')
+    return render_template("add.html", min=min_date, logged_in=current_user.is_authenticated, data=result)
+
+@app.route('/logout', methods=['GET','POST'])
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
 
 if __name__ == "__main__":
     app.run(debug=True, port=5010)

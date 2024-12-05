@@ -3,17 +3,62 @@
 <head>
   <meta charset="UTF-8">
   <title>ToDo</title>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-</head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="{{ url_for('static', filename='../static/styles.css')}}"></head>
 <body>
-  <div>
-    <form>
-      <input type="date" id="txtDate" min="2024-12-03"><br>
-      <textarea></textarea><br>
-      <button type="submit">Submit</button>
-    </form>
+  <div class="topnav">
+  <!-- Centered link -->
+  <div class="topnav-centered">
+    <a href="{{ url_for('index') }}" class="active">
+      <img src="./static/logo.png" alt="" width="50" height="50">
+    </a>
   </div>
 
+  <!-- Right-aligned links -->
+    <div class="topnav-right">
+      {% if not logged_in: %}
+        <a href="{{ url_for('signup') }}">SignUp</a>
+        <a href="{{ url_for('login') }}">Login</a>
+      {% else %}
+        <a href="{{ url_for('logout') }}">Logout</a>
+      {% endif %}
+    </div>
+  </div>
 
+   <div class="row">
+    <div class="column">
+      <div class="registration-form">
+        <form action="{{ url_for('add') }}" method="post">
+          <div class="form-icon">
+            <span><ion-icon name="clipboard-outline"></ion-icon></span>
+          </div>
+          <div class="form-group">
+            <input type="date" class="form-control item" id="date" name="date" min="{{ min }}">
+          </div>
+          <div class="form-group">
+            <textarea name="task" placeholder="Tasks" style="width:100%"></textarea><br>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-block create-account">Submit Task</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="column column2">
+      <u><h2>Today's Tasks({{min}})</h2></u>
+      {% for task in data %}
+      <div class="tasks">
+          <ul class="myUL">
+            <li><h5>{{ task.tasks}}</h5></li>
+          </ul>
+
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 </html>
