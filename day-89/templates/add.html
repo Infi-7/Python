@@ -25,38 +25,43 @@
     </div>
   </div>
 
-   <div class="row">
-    <div class="column">
-      <div class="registration-form">
-        <form action="{{ url_for('add') }}" method="post">
-          <div class="form-icon">
-            <span><ion-icon name="clipboard-outline"></ion-icon></span>
-          </div>
-          <div class="form-group">
-            <input type="date" class="form-control item" id="date" name="date" min="{{ min }}">
-          </div>
-          <div class="form-group">
-            <textarea name="task" placeholder="Tasks" style="width:100%"></textarea><br>
-          </div>
-          <div class="form-group">
-            <button type="submit" class="btn btn-block create-account">Submit Task</button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <div class="column column2">
-      <u><h2>Today's Tasks({{min}})</h2></u>
-      {% for task in data %}
-      <div class="tasks">
-          <ul class="myUL">
-            <li><h5>{{ task.tasks}}</h5></li>
-          </ul>
-
-      </div>
-      {% endfor %}
+ <div class="row">
+  <div class="column">
+    <div class="registration-form">
+      <form action="{{ url_for('add') }}" method="post">
+        <div class="form-icon">
+          <span><ion-icon name="clipboard-outline"></ion-icon></span>
+        </div>
+        <div class="form-group">
+          <input type="date" class="form-control item" id="date" name="date" min="{{ min }}" required>
+        </div>
+        <div class="form-group">
+          <textarea name="task" placeholder="Task" style="width:100%" required></textarea><br>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-block create-account">Submit Task</button>
+        </div>
+      </form>
     </div>
   </div>
+
+  <div class="column column2">
+    <u><h2 class="column2-title">Today's Tasks({{min}})</h2></u>
+    {% for task in data %}
+      <div class="tasks">
+        <ul class="myUL">
+          <li><h5>{{ task.tasks}}
+            <a href="{{ url_for('delete', task_id=task.id) }}"><button><ion-icon name="close-outline"></ion-icon></button></a>
+          </h5></li>
+        </ul>
+      </div>
+    {% endfor %}
+    </div>
+  </div>
+
+  <footer class="py-3 my-4">
+    <p class="text-center text-body-secondary">© 2024 My ToDo</p>
+  </footer>
 
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>

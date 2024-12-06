@@ -1,5 +1,8 @@
 import os
 import datetime
+import time
+from crypt import methods
+
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -121,6 +124,15 @@ def add():
         db.session.commit()
         return redirect('add')
     return render_template("add.html", min=min_date, logged_in=current_user.is_authenticated, data=result)
+
+@app.route("/delete/<int:task_id>", methods=['GET','POST'])
+@login_required
+def delete(task_id):
+    task_to_delete = db.get_or_404(Task, task_id)
+    db.session.delete(task_to_delete)
+    db.session.commit()
+    time.sleep(2)
+    return redirect('/add')
 
 @app.route('/logout', methods=['GET','POST'])
 @login_required
