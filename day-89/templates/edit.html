@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Task</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='../static/styles.css')}}">
+</head>
+<body>
+  <div class="topnav">
+  <!-- Centered link -->
+    <div class="topnav-centered">
+      <a href="{{ url_for('index') }}" class="active">
+        <img src="../static/logo.png" alt="" width="50" height="50">
+      </a>
+    </div>
+
+  <!-- Right-aligned links -->
+    <div class="topnav-right">
+      {% if not logged_in: %}
+        <a href="{{ url_for('signup') }}">SignUp</a>
+        <a href="{{ url_for('login') }}">Login</a>
+      {% else %}
+        <a href="{{ url_for('logout') }}">Logout</a>
+      {% endif %}
+    </div>
+</div>
+
+  <div class="container mt-4">
+    <h1>Edit Task</h1>
+    <form action="{{ url_for('edit', task_id=task.id) }}" method="POST">
+      <div class="form-group">
+        <label for="date">Date:</label>
+        <input type="date" class="form-control" id="date" name="date" value="{{ task.date }}" required>
+      </div>
+      <div class="form-group">
+        <label for="task">Task:</label>
+        <textarea class="form-control" id="task" name="task" required>{{ task.tasks }}</textarea>
+      </div>
+      <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+    </form>
+    <a href="{{ url_for('add') }}" class="btn btn-secondary mt-3">Cancel</a>
+  </div>
+
+  <footer class="py-3 my-4">
+    <p class="text-center text-body-secondary">© 2024 My ToDo</p>
+  </footer>
+</body>
+</html>

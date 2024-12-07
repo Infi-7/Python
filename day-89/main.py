@@ -1,8 +1,6 @@
 import os
 import datetime
 import time
-from crypt import methods
-
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -125,6 +123,51 @@ def add():
         return redirect('add')
     return render_template("add.html", min=min_date, logged_in=current_user.is_authenticated, data=result)
 
+@app.route("/edit/<int:task_id>", methods=['GET', 'POST'])
+@login_required
+def edit(task_id):
+    task_to_edit = db.get_or_404(Task, task_id)
+
+    # Ensure the current user is authorized to edit the task
+    if task_to_edit.author_id != current_user.id:
+        abort(403)  # Forbidden
+
+    if request.method == 'POST':
+        # Update the task
+        task_to_edit.date = request.form.get('date')
+        task_to_edit.tasks = request.form.get('task')
+        db.session.commit()
+        flash('Task updated successfully!')
+        return redirect(url_for('add'))
+
+    # Render the edit form pre-filled with current task data
+    return render_template('edit.html', task=task_to_edit, logged_in=current_user.is_authenticated)
+
+
+@app.route("/all-tasks", methods=['GET', 'POST'])
+@login_required
+def all_tasks():
+    # Fetch all tasks belonging to the logged-in user
+    tasks = db.session.execute(db.select(Task).where(Task.author_id == current_user.id)).scalars().all()
+
+    if request.method == 'POST':
+        # Handle editing of tasks directly from this page
+        task_id = request.form.get('task_id')
+        task_to_edit = db.get_or_404(Task, task_id)
+
+        # Ensure only the owner can edit
+        if task_to_edit.author_id != current_user.id:
+            abort(403)
+
+        task_to_edit.date = request.form.get('date')
+        task_to_edit.tasks = request.form.get('task')
+        db.session.commit()
+        flash('Task updated successfully!')
+        return redirect(url_for('all_tasks'))
+
+    return render_template('all_tasks.html', tasks=tasks, logged_in=current_user.is_authenticated)
+
+
 @app.route("/delete/<int:task_id>", methods=['GET','POST'])
 @login_required
 def delete(task_id):
@@ -132,7 +175,7 @@ def delete(task_id):
     db.session.delete(task_to_delete)
     db.session.commit()
     time.sleep(2)
-    return redirect('/add')
+    return redirect('/all-tasks')
 
 @app.route('/logout', methods=['GET','POST'])
 @login_required
