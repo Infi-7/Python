@@ -8,11 +8,11 @@
 <body>
   <div class="topnav">
   <!-- Centered link -->
-  <div class="topnav-centered">
-    <a href="{{ url_for('index') }}" class="active">
-      <img src="./static/logo.png" alt="" width="50" height="50">
-    </a>
-  </div>
+    <div class="topnav-centered">
+      <a href="{{ url_for('index') }}" class="active">
+        <img src="./static/logo.png" alt="" width="50" height="50">
+      </a>
+    </div>
 
   <!-- Right-aligned links -->
     <div class="topnav-right">
@@ -20,6 +20,7 @@
         <a href="{{ url_for('signup') }}">SignUp</a>
         <a href="{{ url_for('login') }}">Login</a>
       {% else %}
+        <a href="{{ url_for('all_tasks') }}">All Tasks</a>
         <a href="{{ url_for('logout') }}">Logout</a>
       {% endif %}
     </div>
@@ -47,15 +48,29 @@
 
   <div class="column column2">
     <u><h2 class="column2-title">Today's Tasks({{min}})</h2></u>
-    {% for task in data %}
-      <div class="tasks">
-        <ul class="myUL">
-          <li><h5>{{ task.tasks}}
-            <a href="{{ url_for('delete', task_id=task.id) }}"><button><ion-icon name="close-outline"></ion-icon></button></a>
-          </h5></li>
-        </ul>
-      </div>
-    {% endfor %}
+    <div class="container mt-4">
+  <table class="table table-bordered table-striped text-center">
+    <thead>
+      <tr>
+        <th>Task</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in data %}
+        <tr>
+          <!-- Center-align task text -->
+          <td>{{ task.tasks }}</td>
+          <td>
+            <!-- Buttons in the same column -->
+            <a href="{{ url_for('edit', task_id=task.id) }}" class="btn btn-warning btn-sm">Edit</a>
+            <a href="{{ url_for('delete', task_id=task.id) }}" class="btn btn-danger btn-sm">Delete</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
     </div>
   </div>
 
