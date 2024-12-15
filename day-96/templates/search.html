@@ -3,8 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <title>Search</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='../static/search-css.css')}}">
 </head>
 <body>
-  {{ data }}
+  <div>
+    <div style="text-align:center" class="game_img">
+      <img src="{{ data['image'] }}" alt="{{ data['title'] }} thumbnail image">
+    </div>
+
+
+    <b><label>Title</label></b>
+    <p>{{ data['title'] }}</p>
+
+    <b><label>Description</label></b>
+    <p>{{ data['description'] }}</p>
+
+    <b><label>Giveaway Status</label></b>
+    <p>{{ data['status'] }}</p>
+
+    <b><label>Price</label></b>
+    <p>{{ data['worth'] }}</p>
+
+    <b><label>Publish Date & Time</label></b>
+    <p>{{ data['published_date'] }}</p>
+
+    <b><label>End Date</label></b>
+    <p>{{ data['end_date'] }}</p>
+
+    <b><label>Instructions</label></b>
+    <p>{{ data['instructions'] }}</p>
+
+    <a href="{{ data['open_giveaway_url'] }}"><button>Giveaway Link</button></a>
+
+  </div>
 </body>
 </html>

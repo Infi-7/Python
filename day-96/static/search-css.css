@@ -1,0 +1,40 @@
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+div {
+  max-width: 800px;
+  margin: 20px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+div label {
+  font-size: 1.2rem;
+  color: #555;
+}
+
+div p {
+  margin: 5px 0 15px 0;
+  font-size: 1rem;
+}
+
+div button {
+  background: #28a745;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  transition: background 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+div button:hover {
+  background: #218838;
+}

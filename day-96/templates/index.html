@@ -12,13 +12,14 @@
       {% for x in data:%}
       <div class="col">
         <div class="card shadow-sm">
-          <img src="{{ x['image'] }}" width="100%" height="225"/>
+          <img src="{{ x['image'] }}"/>
           <div class="card-body">
             <b><p class="card-text">Title: {{ x['title'] }}</p></b>
             <b><p class="card-text">Platform: {{ x['platforms'] }}</p></b>
             <b><p class="card-text">End Date: {{ x['end_date'] }}</p></b>
 
-            <a href="{{ x['open_giveaway'] }}"><button class="btn">GoTo</button></a>
+            <a href="{{ url_for('search_by_id', game_id=x['id']) }}" class="btn btn-info">More Info</a>
+            <a href="{{ x['open_giveaway'] }}"><button class="btn btn-primary">GoTo</button></a>
 
           </div>
         </div>
