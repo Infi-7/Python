@@ -1,0 +1,16 @@
+.carousel slide {
+    padding-top:3%;
+}
+
+.carousel-item img {
+  max-height: 80vh; /* Limit the height to the viewport */
+  width: auto; /* Maintain the original aspect ratio */
+  margin: auto; /* Center the image */
+  display: block; /* Ensure proper centering with margin */
+  object-fit: contain; /* Make sure the entire image fits within the container */
+}
+
+.container {
+    padding-top:3%;
+    padding-bottom:3%;
+}
