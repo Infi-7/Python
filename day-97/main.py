@@ -3,7 +3,7 @@ from flask import *
 import requests
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy import Integer, String
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 from dotenv import load_dotenv
@@ -33,6 +33,17 @@ class User(UserMixin, db.Model):
     email: Mapped[str] = mapped_column(String(100), unique=True)
     password: Mapped[str] = mapped_column(String(100))
 
+    wishlist_items = relationship("Wishlist", back_populates="user_name")
+
+class Wishlist(db.Model):
+    __tablename__ = "wishlist"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    username: Mapped[str] = mapped_column(String(100))
+    product_id: Mapped[int] = mapped_column(Integer)
+
+    user_id:Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
+    user_name:Mapped["User"] = relationship(back_populates="wishlist_items")
+
 with app.app_context():
     db.create_all()
 
@@ -46,6 +57,8 @@ def index():
     images = []
     for data in all_products:
         images.append(data['image'])
+
+    print(all_products[0])
     return render_template("index.html", data=all_products, img_data=images[0:6], logged_in=current_user.is_authenticated)
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -104,7 +117,12 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-
+@app.route("/search/<int:product_id>")
+def search(product_id):
+    response = requests.get(base_url+f"/{product_id}")
+    data = response.json()
+    print(data)
+    return render_template("product.html", data=data)
 
 if __name__=="__main__":
     app.run(debug=True, port=5010)
