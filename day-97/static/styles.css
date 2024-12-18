@@ -1,212 +1,100 @@
-.carousel slide {
-    padding-top:3%;
+/* General reset */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Full-screen carousel */
+.carousel {
+    padding-top: 3%;
 }
 
 .carousel-item img {
-  max-height: 80vh; /* Limit the height to the viewport */
-  width: auto; /* Maintain the original aspect ratio */
-  margin: auto; /* Center the image */
-  display: block; /* Ensure proper centering with margin */
-  object-fit: contain; /* Make sure the entire image fits within the container */
+    max-height: 80vh; /* Limit image height to viewport */
+    width: auto; /* Maintain aspect ratio */
+    margin: auto; /* Center the image */
+    display: block;
+    object-fit: contain; /* Ensure the entire image fits */
 }
 
 .container {
-    padding-top:3%;
-    padding-bottom:3%;
+    padding: 3% 5%; /* Add some space around the content */
 }
 
-/* Add a black background color to the top navigation */
-.topnav {
-  position: relative;
-  background-color: #333;
-  overflow: hidden;
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
-
-/* Style the links inside the navigation bar */
-.topnav a {
-  float: left;
-  color: #f2f2f2;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-  font-size: 17px;
-}
-
-
-/* Centered section inside the top navigation */
-.topnav-centered a {
-  float: none;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* Right-aligned section inside the top navigation */
-.topnav-right {
-  float: right;
-}
-
-/* Responsive navigation menu - display links on top of each other instead of next to each other (for mobile devices) */
-@media screen and (max-width: 600px) {
-  .topnav a, .topnav-right {
-    float: none;
-    display: block;
-  }
-
-  .topnav-centered a {
-    position: relative;
-    top: 0;
-    left: 0;
-    transform: none;
-  }
-}
-
-/*changes nav bar color*/
-.bg-body-tertiary {
-  --bs-bg-opacity: 1;
-  background-color: rgb(177, 183, 189) !important;
-}
-
-/*center aligns cafe info on index page*/
-.card-body{
-    text-align:center;
-}
-
-/*adds border to the card*/
-.shadow-sm{
-    border:1px solid black;
-}
-
-/*adds border to the button inside card*/
-.btn{
-    border: 1px solid black;
-    text-align:center;
-}
-
-/*fills the bg with black when hover*/
-.btn:hover{
-    background-color:black;
-    color:white
-}
-
-.sign-up-form{
-    border:1px solid black;
-}
-
-.sign-up-form input{
-    margin: 10px;
-
-}
-
-.registration-form{
-	padding: 50px 0;
-}
-
-.registration-form form{
-    background-color: #fff;
-    max-width: 400px;
-    margin: auto;
-    padding: 50px 70px;
-    border-top-left-radius: 30px;
-    border-top-right-radius: 30px;
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.075);
-}
-
-.registration-form .form-icon{
-	text-align: center;
-    background-color: #5891ff;
-    border-radius: 50%;
-    font-size: 40px;
+/* Navigation bar */
+nav {
+    background-color: #333;
     color: white;
-    width: 100px;
-    height: 100px;
-    margin: auto;
-    margin-bottom: 50px;
-    line-height: 100px;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    align-items: center;
 }
 
-.registration-form .item{
-	border-radius: 20px;
-    margin-bottom: 25px;
-    padding: 10px 20px;
-}
-
-.registration-form .create-account{
-    border-radius: 30px;
-    padding: 10px 20px;
-    font-size: 18px;
-    font-weight: bold;
-    background-color: #5791ff;
-    border: none;
+nav a {
     color: white;
-    margin-top: 20px;
-}
-
-.registration-form .social-media{
-    max-width: 600px;
-    background-color: #fff;
-    margin: auto;
-    padding: 35px 0;
-    text-align: center;
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
-    color: #9fadca;
-    border-top: 1px solid #dee9ff;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.075);
-}
-
-.registration-form .social-icons{
-    margin-top: 30px;
-    margin-bottom: 16px;
-}
-
-.registration-form .social-icons a{
-    font-size: 23px;
-    margin: 0 3px;
-    color: #5691ff;
-    border: 1px solid;
-    border-radius: 50%;
-    width: 45px;
-    display: inline-block;
-    height: 45px;
-    text-align: center;
-    background-color: #fff;
-    line-height: 45px;
-}
-
-.registration-form .social-icons a:hover{
     text-decoration: none;
-    opacity: 0.6;
+    padding: 10px 15px;
 }
 
-@media (max-width: 576px) {
-    .registration-form form{
-        padding: 50px 20px;
-    }
-
-    .registration-form .form-icon{
-        width: 70px;
-        height: 70px;
-        font-size: 30px;
-        line-height: 70px;
-    }
+nav a:hover {
+    background-color: #575757;
 }
 
-.registration-form button{
-    width:100%
+/* Dropdown menu */
+.dropdown {
+    position: relative;
 }
 
-.error{
-    color:red;
-    text-align:center;
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #444;
+    min-width: 150px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    border-radius: 5px;
+    overflow: hidden;
 }
 
-.form-check-group{
-    display:flex;
-    justify-content: space-evenly;
+.dropdown-menu a {
+    padding: 10px 15px;
+    color: white;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-menu a:hover {
+    background-color: #575757;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+/* Card styles */
+.card-body {
+    text-align: center;
+}
+
+.card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.card button {
+    border: 1px solid #ccc;
+    background-color: #f8f8f8;
+    color: #333;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.card button:hover {
+    background-color: #333;
+    color: white;
 }
